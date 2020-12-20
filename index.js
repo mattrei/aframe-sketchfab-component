@@ -11,7 +11,7 @@ const THREEZipLoader = require('three-ziploader')
 /**
  * Google Poly component for A-Frame.
  */
-AFRAME.registerComponent('google-poly', {
+AFRAME.registerComponent('sketchfab', {
   schema: {
     apiKey: {
       default: ''

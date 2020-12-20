@@ -2,24 +2,24 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>A-Frame Google Poly Component - Basic</title>
-    <meta name="description" content="Basic example for Google Poly component."></meta>
-    <script src="https://aframe.io/releases/1.0.3/aframe.min.js"></script>
-    <script src="../../dist/aframe-google-poly-component.min.js"></script>
+    <title>A-Frame Sketchfab Component - Basic</title>
+    <meta name="description" content="Basic example for Sketchfab component."></meta>
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="../../dist/aframe-sketchfab-component.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component"></script>
   </head>
   <body>
     <a-scene environment="preset: forest">
       <a-entity position="0 1.6 -2">
-        <a-entity google-poly="apiKey: AIzaSyBLFr0cInKQKopG1TsmIpZc5MJbp3SBZm4; src: c3lXOu8gooq" position="-1 0 0"
+        <a-entity sketchfab="apiKey: AIzaSyBLFr0cInKQKopG1TsmIpZc5MJbp3SBZm4; src: c3lXOu8gooq" position="-1 0 0"
                   animation="property: scale; from: 1 1 1; to: 1.4 1.4 1.4; loop: true; easing: linear; dur: 3000; dir: alternate"
         ></a-entity>
+        <!--
         <a-entity google-poly="apiKey: AIzaSyBLFr0cInKQKopG1TsmIpZc5MJbp3SBZm4; src: 6pwiq7hSrHr" scale="2 2 2" position="0 0.5 -2"
                   animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; easing: linear; dur: 5000"
         ></a-entity>
         <a-entity google-poly="apiKey: AIzaSyBLFr0cInKQKopG1TsmIpZc5MJbp3SBZm4; src: cwyNyIba6WE" scale="0.5 0.5 0.5" position="1 0 0"></a-entity>
-        <!-- this one is in GLTF 1 format -->
-        <a-entity google-poly="apiKey: AIzaSyBLFr0cInKQKopG1TsmIpZc5MJbp3SBZm4; src: 4b43aCLSGku" position="0 0 0"></a-entity>
+        -->
       </a-entity>
     </a-scene>
 
