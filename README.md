@@ -11,7 +11,7 @@ For [A-Frame](https://aframe.io).
 
 | Property | Description | Default Value |
 | -------- | ----------- | ------------- |
-| apiKey | Sketchfab API Key |               |
+| token | Sketchfab API Token |               |
 | src | Sketchfab Model Identifier |               |
 | normalize | Scale the geometry to a unit of 1 and translate the geometry to `0 0 0` | `true` |
 

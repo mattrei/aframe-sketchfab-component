@@ -12,7 +12,7 @@ module.exports = {
   output: {
     globalObject: 'this',
     path: __dirname + '/dist',
-    filename: process.env.NODE_ENV === 'production' ? 'aframe-google-poly-component.min.js' : 'aframe-google-poly-component.js',
+    filename: process.env.NODE_ENV === 'production' ? 'aframe-sketchfab-component.min.js' : 'aframe-sketchfab-component.js',
     libraryTarget: 'umd'
   },
   plugins: PLUGINS,

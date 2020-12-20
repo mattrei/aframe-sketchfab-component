@@ -4,16 +4,18 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 
-const POLY_API_URL = 'https://poly.googleapis.com/v1/assets/'
+const SKETCHFAB_API_URL = 'https://api.sketchfab.com/v3/models/MODEL/download'
 
 const THREEZipLoader = require('three-ziploader')
 
+//https://sketchfab.com/developers/download-api/downloading-models/javascript
+
 /**
- * Google Poly component for A-Frame.
+ * Sketchfab component for A-Frame.
  */
 AFRAME.registerComponent('sketchfab', {
   schema: {
-    apiKey: {
+    token: {
       default: ''
     },
     src: {
@@ -35,12 +37,12 @@ AFRAME.registerComponent('sketchfab', {
     const el = this.el
     const data = this.data;
 
-    if (!data.src || !data.apiKey) return; 
+    if (!data.src || !data.token) return; 
 
     this.remove()
 
-    this.getGLTFUrl(data.src, data.apiKey)
-      .then(this.loadPolyModel)
+    this.getGLTFUrl(data.src, data.token)
+      .then(this.loadSketchfabModel)
       .then(gltfModel => {
 
         this.model = gltfModel.scene || gltfModel.scenes[0]
@@ -56,7 +58,7 @@ AFRAME.registerComponent('sketchfab', {
       })
       .catch(err => {
 
-        console.error('ERROR loading Google Poly model from "' + data.src +'" : ' + err)
+        console.error('ERROR loading Sketchfab model from "' + data.src +'" : ' + err)
         el.emit('model-error', err)
 
       })
@@ -111,84 +113,59 @@ AFRAME.registerComponent('sketchfab', {
     this._remove();
   },
 
-  getGLTFUrl: function(id, apiKey) {
-    const url = POLY_API_URL + id + '/?key=' + apiKey;
+  getGLTFUrl: function(id, token) {
+    const url = SKETCHFAB_API_URL.replace(/MODEL/,  id);
 
-    // try cache
-     /*
-    var getUrlPromise = promiseCache.get(url)
-    if (!getUrlPromise) {
-*/
-      return fetch(url).then(function (response) {
+        // Configure Header
+        var options = {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            mode: 'cors'
+        };
 
-        // parse response
+      return fetch(url, options).then((response) => {
         return response.json().catch((error) => {
           // handle JSON parsing error
-          console.log('ERROR parsing Google Poly API server response JSON.\nRequested Model: "' + url + '"\nError: "' + JSON.stringify(error) + '"')
-          return Promise.reject('Google Poly API server error. Check console for details.')
-        }).then((info) => {
-          if (info.error !== undefined) {
-            return Promise.reject('Poly API error: ' + info.error.message)
+          console.log('ERROR parsing Sketchfab server response JSON.\nRequested Model: "' + url + '"\nError: "' + JSON.stringify(error) + '"')
+          return Promise.reject('Sketchfab API server error. Check console for details.')
+        }).then((data) => {
+          if (!data.gltf.url) {
+            return Promise.reject('Sketchfab API error', data)
           }
-          const format = info.formats.find( format => format.formatType === 'GLTF' || format.formatType === 'GLTF2' );
-          if ( format ) {
-            const r = info.presentationParams.orientingRotation;
-            const quaternion = new THREE.Quaternion(r.x || 0, r.y || 0, r.z || 0, r.w || 1);
-            return {url: format.root.url, quaternion: quaternion, format: format.formatType}
-          } else {
-            return Promise.reject('Poly asset id:' + id + ' not provided in GLTF or GLTF2 format.')
-          }
+          return {...data.gltf}
         })
 
       })
-
-    /*
-      // add to cache
-      promiseCache.add(url, getUrlPromise)
-
-    }
-
-    return getUrlPromise
-    */
-
   },
-  loadPolyModel: function(data, onProgress) {
+  loadSkechfabModel: function(data, onProgress) {
     const url = data.url;
-    const quaternion = data.quaternion;
-    const format = data.format;
+    const size = data.size;
     const matrix = new THREE.Matrix4().makeRotationFromQuaternion(quaternion);
+
+
+    const manager = new THREE.LoadingManager();
+
 
     return new Promise((resolve, reject) => {
 
-      const loader = new THREE.FileLoader()
-      loader.setResponseType( 'arraybuffer' )
-      loader.load( url, data => {
-        try {
-          console.log('loading', url, format)
-          const gltfLoader = format === 'GLTF' ? new THREE.LegacyGLTFLoader() : new THREE.GLTFLoader();
-          const path = THREE.LoaderUtils.extractUrlBase(url)
+      const zipLoader = new THREE.ZipLoader()
+      //loader.setResponseType( 'arraybuffer' )
+      zipLoader.load(url).then(file => {
+        console.log('zip loaded', file)
+        manager.setURLModifier(file.urlResolver);
+        const item = resolve(zip.find( /\.(gltf|glb)$/i )[ 0 ] );
 
-          gltfLoader.parse( data, path, gltf => {
-            gltf.scene.traverse(function (child) {
-              if (format === 'GLTF' && child.material) child.material = new THREE.MeshStandardMaterial({ vertexColors: THREE.VertexColors })
-              if (child.geometry) child.geometry.applyMatrix(matrix);
-            })
-            resolve(gltf);
-          }, reject)
+        const gltfLoader = new THREE.GLTFLoader(manager)
+        gltfLoader.load(file, (gltf) => {
 
-        } catch ( e ) {
-          console.error(e)
-
-          // For SyntaxError or TypeError, return a generic failure message.
-          reject( e.constructor === Error ? e : new Error( 'THREE.GLTFLoader: Unable to parse model.' ) )
-
-        }
-
-      }, onProgress, reject )
-
+           console.log('gltf loaded', gltf)
+            resolve(gltf)
+        })
+      })
     })
   }
-
 });
 
 

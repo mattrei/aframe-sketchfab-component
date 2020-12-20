@@ -3,18 +3,18 @@ require('aframe');
 require('../index.js');
 var entityFactory = require('./helpers').entityFactory;
 
-suite('google-poly component', function () {
+suite('sketchfab component', function () {
   var component;
   var el;
 
   setup(function (done) {
     el = entityFactory();
     el.addEventListener('componentinitialized', function (evt) {
-      if (evt.detail.name !== 'google-poly') { return; }
-      component = el.components['google-poly'];
+      if (evt.detail.name !== 'sketchfab') { return; }
+      component = el.components['sketchfab'];
       done();
     });
-    el.setAttribute('google-poly', {});
+    el.setAttribute('sketchfab', {});
   });
 
   suite('foo property', function () {
