@@ -5,14 +5,15 @@
     <title>A-Frame Sketchfab Component - Basic</title>
     <meta name="description" content="Basic example for Sketchfab component."></meta>
     <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
-    <script src="../../dist/aframe-sketchfab-component.min.js"></script>
+    <script src="../../dist/aframe-sketchfab-component.js"></script>
     <script src="https://unpkg.com/aframe-environment-component"></script>
   </head>
   <body>
     <a-scene environment="preset: forest">
-      <a-entity position="0 1.6 -2">
-        <a-entity sketchfab="token: 51ce2d6489af40b0b3ba236ea1dabe7e; src: 49d97ca2fbf34f85b6c88ae8ebc7514f" position="-1 0 0"
-                  animation="property: scale; from: 1 1 1; to: 1.4 1.4 1.4; loop: true; easing: linear; dur: 3000; dir: alternate"
+      <a-entity position="0 0 -2">
+        <a-entity sketchfab="token: NdrQujBnr2qP1Z3nLQTLmiOSX5Ekuq; src: 7edafaf54d6b4db9861f066711f4f127" position="-1 0 0"
+                  animation__scale="property: scale; from: 1 1 1; to: 1.4 1.4 1.4; loop: true; easing: linear; dur: 3000; dir: alternate"
+                  animation__rotation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; easing: linear; dur: 5000"
         ></a-entity>
         <!--
         <a-entity google-poly="apiKey: AIzaSyBLFr0cInKQKopG1TsmIpZc5MJbp3SBZm4; src: 6pwiq7hSrHr" scale="2 2 2" position="0 0.5 -2"
